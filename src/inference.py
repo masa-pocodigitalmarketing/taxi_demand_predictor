@@ -64,6 +64,12 @@ def load_batch_of_features_from_store(
         start_time=(fetch_data_from - timedelta(days=1)),
         end_time=(fetch_data_to + timedelta(days=1))
     )
+
+    # Convert Timestamp objects to datetime64[ns, UTC]
+    fetch_data_from = pd.to_datetime(fetch_data_from, utc=True)
+    fetch_data_to = pd.to_datetime(fetch_data_to, utc=True)
+
+    # filter data to the time period we are interested in
     ts_data = ts_data[ts_data.pickup_hour.between(fetch_data_from, fetch_data_to)]
 
     # validate we are not missing data in the feature store

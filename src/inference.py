@@ -170,6 +170,11 @@ def load_predictions_from_store(
         start_time=from_pickup_hour - timedelta(days=1),
         end_time=to_pickup_hour + timedelta(days=1)
     )
+
+    # Convert Timestamp objects to datetime64[ns, UTC]
+    to_pickup_hour = pd.to_datetime(to_pickup_hour, utc=True)
+    to_pickup_hour = pd.to_datetime(to_pickup_hour, utc=True)
+
     predictions = predictions[predictions.pickup_hour.between(
         from_pickup_hour, to_pickup_hour)]
 

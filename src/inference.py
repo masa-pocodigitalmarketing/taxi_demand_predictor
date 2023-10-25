@@ -172,11 +172,11 @@ def load_predictions_from_store(
     )
 
     # Convert Timestamp objects to datetime64[ns, UTC]
-    from_pickup_hour = pd.to_datetime(from_pickup_hour, utc=True)
-    to_pickup_hour = pd.to_datetime(to_pickup_hour, utc=True)
+    from_pickup_hour_ = pd.to_datetime(from_pickup_hour, utc=True)
+    to_pickup_hour_ = pd.to_datetime(to_pickup_hour, utc=True)
 
     predictions = predictions[predictions.pickup_hour.between(
-        from_pickup_hour, to_pickup_hour)]
+        from_pickup_hour_, to_pickup_hour_)]
 
     # sort by `pick_up_hour` and `pickup_location_id`
     predictions.sort_values(by=['pickup_hour', 'pickup_location_id'], inplace=True)

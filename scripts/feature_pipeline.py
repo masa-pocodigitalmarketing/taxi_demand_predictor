@@ -9,7 +9,7 @@ from src.data import (
     fetch_ride_events_from_data_warehouse,
     transform_raw_data_into_ts_data,
 )
-from src.feature_store_api import get_feature_group
+from src.feature_store_api import get_feature_group, get_or_create_feature_group
 from src.logger import get_logger
 
 logger = get_logger()
@@ -38,10 +38,14 @@ def run(date: datetime):
     # pickup location and hour
     ts_data = transform_raw_data_into_ts_data(rides)
 
+    # make sure UTC timezone is set
+    ts_data['pickup_hour'] = pd.to_datetime(ts_data['pickup_hour'], utc=True)
+
     logger.info('Getting pointer to the feature group we wanna save data to')
     # get a pointer to the feature group we wanna write to
-    feature_group = get_feature_group(name=config.FEATURE_GROUP_NAME,
-                                      version=config.FEATURE_GROUP_VERSION)
+    # feature_group = get_feature_group(name=config.FEATURE_GROUP_NAME,
+    #                                   version=config.FEATURE_GROUP_VERSION)
+    feature_group = get_or_create_feature_group(config.FEATURE_GROUP_METADATA)
     
     logger.info('Start job to insert data into feature group')
     # start a job to insert the data into the feature group

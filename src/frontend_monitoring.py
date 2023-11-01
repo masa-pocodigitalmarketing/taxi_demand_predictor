@@ -46,7 +46,7 @@ def _load_predictions_and_actuals_from_store(
 with st.spinner(text="Fetching model predictions and actual values from the store"):
     
     monitoring_df = _load_predictions_and_actuals_from_store(
-        from_date=current_date - timedelta(days=30),
+        from_date=current_date - timedelta(days=14),
         to_date=current_date
     )
     st.sidebar.write('✅ Model predictions and actual values arrived')

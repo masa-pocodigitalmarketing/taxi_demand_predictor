@@ -24,6 +24,7 @@ def run(date: datetime):
         _type_: _description_
     """
     logger.info('Fetching raw data from data warehouse')
+
     # fetch raw ride events from the datawarehouse for the last 28 days
     # we fetch the last 28 days, instead of the last hour only, to add redundancy
     # to the feature_pipeline. This way, if the pipeline fails for some reason,
@@ -33,26 +34,33 @@ def run(date: datetime):
         to_date=date
     )
 
-    logger.info('Transforming raw data into time-series data')
     # transform raw data into time-series data by aggregating rides per
     # pickup location and hour
+    logger.info('Transforming raw data into time-series data')
     ts_data = transform_raw_data_into_ts_data(rides)
 
-    # make sure UTC timezone is set
+    # add new column with the timestamp in Unix seconds
+    logger.info('Adding column `pickup_ts` with Unix seconds...')
     ts_data['pickup_hour'] = pd.to_datetime(ts_data['pickup_hour'], utc=True)
+    ts_data['pickup_ts'] = ts_data['pickup_hour'].astype(int) // 10**6
 
-    logger.info('Getting pointer to the feature group we wanna save data to')
     # get a pointer to the feature group we wanna write to
-    # feature_group = get_feature_group(name=config.FEATURE_GROUP_NAME,
-    #                                   version=config.FEATURE_GROUP_VERSION)
+    logger.info('Getting pointer to the feature group we wanna save data to')
     feature_group = get_or_create_feature_group(config.FEATURE_GROUP_METADATA)
     
-    logger.info('Start job to insert data into feature group')
     # start a job to insert the data into the feature group
     # we wait, to make sure the job is finished before we exit the script, and
     # the inference pipeline can start using the new data
+    logger.info('Starting job to insert data into feature group...')
     feature_group.insert(ts_data, write_options={"wait_for_job": True})
+    # feature_group.insert(ts_data, write_options={"start_offline_backfill": False})
+    
     logger.info('Finished job to insert data into feature group')
+
+    logger.info('Sleeping for 3 minutes to make sure the inference pipeline has time to run')
+    import time
+    time.sleep(3*60)
+
 
 if __name__ == '__main__':
 
@@ -70,5 +78,5 @@ if __name__ == '__main__':
     else:
         current_date = pd.to_datetime(datetime.utcnow()).floor('H')
     
-    print(f'Running feature pipeline for {current_date=}')
+    logger.info(f'Running feature pipeline for {current_date=}')
     run(current_date)

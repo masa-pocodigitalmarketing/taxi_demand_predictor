@@ -8,7 +8,8 @@ def plot_one_sample(
     example_id: int,
     features: pd.DataFrame,
     targets: Optional[pd.Series] = None,
-    predictions: Optional[pd.Series] = None
+    predictions: Optional[pd.Series] = None,
+    display_title: Optional[bool] = True,
 ):
     """"""
     features_ = features.iloc[example_id]
@@ -27,7 +28,7 @@ def plot_one_sample(
     )
     
     # line plot with past values
-    title = f'Pick up hour={features_["pickup_hour"]}, location_id={features_["pickup_location_id"]}'
+    title = f'Pick up hour={features_["pickup_hour"]}, location_id={features_["pickup_location_id"]}' if display_title else None
     fig = px.line(
         x=ts_dates, y=ts_values,
         template='plotly_dark',

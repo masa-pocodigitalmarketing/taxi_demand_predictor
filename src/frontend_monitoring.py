@@ -11,7 +11,7 @@ from src.monitoring import load_predictions_and_actual_values_from_store
 st.set_page_config(layout="wide")
 
 # title
-current_date = pd.to_datetime(datetime.utcnow()).floor('H')
+current_date = pd.to_datetime(datetime.utcnow(), utc=True).floor('H')
 st.title(f'Monitoring dashboard 🔎')
 
 progress_bar = st.sidebar.header('⚙️ Working Progress')

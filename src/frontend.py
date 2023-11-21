@@ -117,14 +117,18 @@ next_hour_predictions_ready = \
 prev_hour_predictions_ready = \
     False if predictions_df[predictions_df.pickup_hour == (current_date - timedelta(hours=1))].empty else True
 
+# breakpoint()
+
 if next_hour_predictions_ready:
     # predictions for the current hour are available
     predictions_df = predictions_df[predictions_df.pickup_hour == current_date]
+
 elif prev_hour_predictions_ready:
     # predictions for current hour are not available, so we use previous hour predictions
     predictions_df = predictions_df[predictions_df.pickup_hour == (current_date - timedelta(hours=1))]
     current_date = current_date - timedelta(hours=1)
     st.subheader('⚠️ The most recent data is not yet available. Using last hour predictions')
+
 else:
     raise Exception('Features are not available for the last 2 hours. Is your feature \
                     pipeline up and running? 🤔')
@@ -200,16 +204,31 @@ with st.spinner(text="Fetching batch of features used in the last run"):
 
 with st.spinner(text="Plotting time-series data"):
    
+    predictions_df = df
+
     row_indices = np.argsort(predictions_df['predicted_demand'].values)[::-1]
     n_to_plot = 10
 
     # plot each time-series with the prediction
     for row_id in row_indices[:n_to_plot]:
+
+        # title
+        location_id = predictions_df['pickup_location_id'].iloc[row_id]
+        location_name = predictions_df['zone'].iloc[row_id]
+        st.header(f'Location ID: {location_id} - {location_name}')
+
+        # plot predictions
+        prediction = predictions_df['predicted_demand'].iloc[row_id]
+        st.metric(label="Predicted demand", value=int(prediction))
+        
+        # plot figure
+        # generate figure
         fig = plot_one_sample(
             example_id=row_id,
             features=features_df,
             targets=predictions_df['predicted_demand'],
-            predictions=pd.Series(predictions_df['predicted_demand'])
+            predictions=pd.Series(predictions_df['predicted_demand']),
+            display_title=False,
         )
         st.plotly_chart(fig, theme="streamlit", use_container_width=True, width=1000)
 

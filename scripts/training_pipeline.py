@@ -47,13 +47,13 @@ def fetch_features_and_targets_from_store(
     )
     from_ts = int(from_date.timestamp())
     to_ts = int(to_date.timestamp())
-    ts_data = ts_data[ts_data['pickup_ts'].between(from_ts, to_ts)]
+    #ts_data = ts_data[ts_data['pickup_ts'].between(from_ts, to_ts)]
     
     # sort by pickup_location_id and pickup_hour in ascending order
     ts_data.sort_values(by=['pickup_location_id', 'pickup_hour'], inplace=True)
 
     # drop `pickup_ts` column
-    ts_data.drop('pickup_ts', axis=1, inplace=True)
+    #ts_data.drop('pickup_ts', axis=1, inplace=True)
 
     # transform time-series data from the feature store into features and targets
     # for supervised learning

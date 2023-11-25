@@ -230,7 +230,7 @@ def train(
         experiment.log_parameter('model_version', model_version)
 
         # send notification on Discord
-        send_message_to_channel(f'New model pushed to the model registry. {test_mae=:.4f}, {model_version=}')
+        #send_message_to_channel(f'New model pushed to the model registry. {test_mae=:.4f}, {model_version=}')
         
     else:
         logger.info('Model did not meet the minimum performance threshold. Skip pushing to the model registry.')

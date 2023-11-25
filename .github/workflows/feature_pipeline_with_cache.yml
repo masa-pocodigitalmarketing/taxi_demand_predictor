@@ -3,13 +3,12 @@ name: hourly-taxi-demand-feature-pipeline-with-cache
 on:
   schedule:
    - cron: '0 * * * *'
-#    - cron: '0 */2 * * *'
 
   workflow_dispatch:
 
 env:
   PYTHON_VERSION: 3.9
-  POETRY_VERSION: 1.4.2
+  POETRY_VERSION: 1.6.1
   POETRY_URL: https://install.python-poetry.org
 
 jobs:
@@ -48,8 +47,9 @@ jobs:
     - name: Install Dependencies
       run: poetry install
         
-    - name: execute python workflows from bash script
+    - name: Run feature generation script
       env: 
+        HOPSWORKS_PROJECT_NAME: ${{ secrets.HOPSWORKS_PROJECT_NAME }}
         HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
       run: make features
   

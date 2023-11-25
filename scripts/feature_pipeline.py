@@ -57,9 +57,9 @@ def run(date: datetime):
     
     logger.info('Finished job to insert data into feature group')
 
-    logger.info('Sleeping for 3 minutes to make sure the inference pipeline has time to run')
+    logger.info('Sleeping for 5 minutes to make sure the inference pipeline has time to run')
     import time
-    time.sleep(3*60)
+    time.sleep(5*60)
 
 
 if __name__ == '__main__':

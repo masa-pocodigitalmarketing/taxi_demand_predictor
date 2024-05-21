@@ -10,7 +10,7 @@ load_dotenv(PARENT_DIR / '.env')
 
 HOPSWORKS_PROJECT_NAME = 'taxi_demand'
 try:
-    # HOPSWORKS_PROJECT_NAME = os.environ['HOPSWORKS_PROJECT_NAME']
+    HOPSWORKS_PROJECT_NAME = os.environ['HOPSWORKS_PROJECT_NAME']
     HOPSWORKS_API_KEY = os.environ['HOPSWORKS_API_KEY']
 except:
     raise Exception(

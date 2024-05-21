@@ -106,7 +106,7 @@ with st.spinner(text="Fetching model predictions from the store"):
     predictions_df = _load_predictions_from_store(
         from_pickup_hour=current_date - timedelta(hours=1),
         to_pickup_hour=current_date
-        )
+    )
     st.sidebar.write('✅ Model predictions arrived')
     progress_bar.progress(2/N_STEPS)
 
@@ -231,5 +231,5 @@ with st.spinner(text="Plotting time-series data"):
             display_title=False,
         )
         st.plotly_chart(fig, theme="streamlit", use_container_width=True, width=1000)
-
+        
     progress_bar.progress(6/N_STEPS)

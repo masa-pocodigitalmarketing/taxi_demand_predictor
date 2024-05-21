@@ -27,3 +27,11 @@ frontend-app:
 
 monitoring-app:
 	poetry run streamlit run src/frontend_monitoring.py
+
+lint:
+	@echo "Fixing linting issues..."
+	poetry run ruff check --fix .
+
+format:
+	echo "Formatting Python code..."
+	poetry run ruff format .

@@ -1,23 +1,24 @@
-name: hourly-taxi-demand-inference-pipeline
+name: inference-pipeline
 
 on:
-  workflow_run:
-    workflows: ["hourly-taxi-demand-feature-pipeline-with-cache"]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["feature-pipeline"]
+  #   types:
+  #     - completed
+  schedule:
+    - cron: '30 * * * *'
 
   workflow_dispatch:
 
 env:
   PYTHON_VERSION: 3.9
-  POETRY_VERSION: 1.6.1
+  POETRY_VERSION: 1.7.0
   POETRY_URL: https://install.python-poetry.org
 
 jobs:
 
   inference_pipeline:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
     - name: Checkout
       uses: actions/checkout@v3

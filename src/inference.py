@@ -16,12 +16,6 @@ def get_hopsworks_project() -> hopsworks.project.Project:
         api_key_value=config.HOPSWORKS_API_KEY
     )
 
-# def get_feature_store() -> FeatureStore:
-    
-#     project = get_hopsworks_project()
-#     return project.get_feature_store()
-
-
 def get_model_predictions(model, features: pd.DataFrame) -> pd.DataFrame:
     """"""
     # past_rides_columns = [c for c in features.columns if c.startswith('rides_')]
@@ -63,7 +57,7 @@ def load_batch_of_features_from_store(
         start_time=fetch_data_from - timedelta(days=1),
         end_time=fetch_data_to + timedelta(days=1)
     )
-
+    
     # filter data to the time period we are interested in
     pickup_ts_from = int(fetch_data_from.timestamp() * 1000)
     pickup_ts_to = int(fetch_data_to.timestamp() * 1000)
@@ -76,7 +70,7 @@ def load_batch_of_features_from_store(
     location_ids = ts_data['pickup_location_id'].unique()
     assert len(ts_data) == config.N_FEATURES * len(location_ids), \
         "Time-series data is not complete. Make sure your feature pipeline is up and runnning."
-    
+
     # transpose time-series data as a feature vector, for each `pickup_location_id`
     x = np.ndarray(shape=(len(location_ids), n_features), dtype=np.float32)
     for i, location_id in enumerate(location_ids):
@@ -115,7 +109,7 @@ def load_model_from_registry():
     return model
 
 def load_predictions_from_store(
-        from_pickup_hour: datetime,
+    from_pickup_hour: datetime,
     to_pickup_hour: datetime
     ) -> pd.DataFrame:
     """
@@ -141,14 +135,14 @@ def load_predictions_from_store(
 
     # get pointer to the feature view
     predictions_fv = get_or_create_feature_view(FEATURE_VIEW_PREDICTIONS_METADATA)
-    
+
     # get data from the feature view
     print(f'Fetching predictions for `pickup_hours` between {from_pickup_hour}  and {to_pickup_hour}')
     predictions = predictions_fv.get_batch_data(
         start_time=from_pickup_hour - timedelta(days=1),
         end_time=to_pickup_hour + timedelta(days=1)
     )
-
+    
     # make sure datetimes are UTC aware
     predictions['pickup_hour'] = pd.to_datetime(predictions['pickup_hour'], utc=True)
     from_pickup_hour = pd.to_datetime(from_pickup_hour, utc=True)

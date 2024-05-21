@@ -46,7 +46,7 @@ def load_predictions_and_actual_values_from_store(
         .filter(predictions_fg.pickup_ts <= to_ts)
     
     # breakpoint()
-    
+
     # create the feature view `config.FEATURE_VIEW_MONITORING` if it does not
     # exist yet
     feature_store = get_feature_store()
@@ -65,7 +65,7 @@ def load_predictions_and_actual_values_from_store(
         name=config.MONITORING_FV_NAME,
         version=config.MONITORING_FV_VERSION
     )
-
+    
     # fetch data form the feature view
     # fetch predicted and actual values for the last 30 days
     monitoring_df = monitoring_fv.get_batch_data(

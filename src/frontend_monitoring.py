@@ -19,7 +19,7 @@ progress_bar = st.sidebar.progress(0)
 N_STEPS = 3
 
 
-@st.cache_data
+# @st.cache_data
 def _load_predictions_and_actuals_from_store(
     from_date: datetime,
     to_date: datetime
@@ -51,6 +51,7 @@ with st.spinner(text="Fetching model predictions and actual values from the stor
     )
     st.sidebar.write('✅ Model predictions and actual values arrived')
     progress_bar.progress(1/N_STEPS)
+    print(monitoring_df.head())
 
 
 with st.spinner(text="Plotting aggregate MAE hour-by-hour"):

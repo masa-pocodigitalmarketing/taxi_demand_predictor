@@ -46,6 +46,7 @@ def fetch_features_and_targets_from_store(
     ts_data, _ = feature_view.training_data(
         description='Time-series hourly taxi rides',
     )
+    ts_data['pickup_hour'] = pd.to_datetime(ts_data['pickup_hour'])
 
     # filter data based on the from_date and to_date expressed\
     # as Unix milliseconds

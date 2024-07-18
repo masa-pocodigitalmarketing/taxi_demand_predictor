@@ -46,16 +46,16 @@ def run(date: datetime):
     # get a pointer to the feature group we wanna write to
     logger.info('Getting pointer to the feature group we wanna save data to')
     feature_group = get_or_create_feature_group(config.FEATURE_GROUP_METADATA)
-    feature_group.delete()
+#    feature_group.delete()
 
     # start a job to insert the data into the feature group
     # we wait, to make sure the job is finished before we exit the script, and
     # the inference pipeline can start using the new data
-#    logger.info('Starting job to insert data into feature group...')
-#    feature_group.insert(ts_data, write_options={'wait_for_job': False})
+    logger.info('Starting job to insert data into feature group...')
+    feature_group.insert(ts_data, write_options={'wait_for_job': False})
     # feature_group.insert(ts_data, write_options={"start_offline_backfill": False})
 
-#    logger.info('Finished job to insert data into feature group')
+    logger.info('Finished job to insert data into feature group')
 
     # logger.info('Sleeping for 5 minutes to make sure the inference pipeline has time to run')
     # import time
